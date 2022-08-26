@@ -10,7 +10,7 @@ export async function getTasks(req, res) {  // later add "by user id" to this ..
     task.id = doc.id;
     return task;
   })  
-  res.send("TASKS");
+  res.send(tasks)
 }
 
 export async function createTask(req, res) {    // will add userId and timestamp
