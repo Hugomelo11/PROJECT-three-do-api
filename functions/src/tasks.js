@@ -1,9 +1,15 @@
+import jwt from 'jsonwebtoken'
 import dbConnect from "./dbConnect.js";
+import { secretKey } from '../credentials.js';
 
 
-export async function getTasks(req, res) {  // later add "by user id" to this ....
+export async function getTasks(req, res) { 
+  const token = req.headers.authorization; 
+  const user = jwt.verify(token, secretKey)
   const db = dbConnect();
-  const collection = await db.collection('tasks').get() 
+  const collection = await db.collection('tasks')
+  .where('userId', '==', user.id)  // able to query data that belongs specifically to one person
+  .get() 
     .catch(err => res.status(500).send(err))
   const tasks = collection.docs.map(doc => {
     let task = doc.data();
@@ -13,12 +19,15 @@ export async function getTasks(req, res) {  // later add "by user id" to this ..
   res.send(tasks)
 }
 
-export async function createTask(req, res) {    // will add userId and timestamp
-  const newTask = req.body;
-  if (!newTask || !newTask.task) {
+export async function createTask(req, res) { 
+  const token = req.headers.authorization;
+  let newTask = req.body;
+  if (!newTask || !newTask.task || !user) {
     res.status(400).send({success: false, message: 'invalid request'})
     return;
   }
+  newTask.userId = user.id;
+  const user = jwt.verify(token, secretKey);
   const db = dbConnect();
   await db.collection('tasks').add(newTask)
     .catch(err => res.status(500).send(err));

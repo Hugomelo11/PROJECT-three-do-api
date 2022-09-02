@@ -1,14 +1,18 @@
 {
   "hosting": {
     "public": "public",
-    "ignore": [
-      "firebase.json",
-      "**/.*",
-      "**/node_modules/**"
-    ],
-    "rewrites": [{
-      "source": "**",
-      "function": "api"
-}]
+    "ignore": ["firebase.json", "**/.*", "**/node_modules/**"],
+    "rewrites": [
+      {
+        "source": "**",
+        "function": "api"
+      }
+    ]
+  },
+  "emulators": {
+    "hosting": {
+      "host": "localhost",
+      "port": "5560"
+    }
   }
 }
